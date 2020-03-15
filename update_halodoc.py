@@ -9,7 +9,7 @@ import numpy as np
 #df_halodoc = pd.to_numeric(df_halodoc, errors='coerce')
 
 #import data apotik
-data_apotik = 'export.csv'
+data_apotik = 'xReport.csv'
 df_apotik = pd.read_csv(data_apotik)
 
 #drugs data non-database
