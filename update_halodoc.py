@@ -1,5 +1,6 @@
 import pandas as pd 
 import numpy as np 
+import xlsxwriter
 
 #import data halodoc
 #data_halodoc = 'data_halodoc.csv'
@@ -9,21 +10,22 @@ import numpy as np
 #df_halodoc = pd.to_numeric(df_halodoc, errors='coerce')
 
 #import data apotik
-data_apotik = 'xReport.csv'
-df_apotik = pd.read_csv(data_apotik)
+df_apotik = pd.read_csv('xReport.csv', error_bad_lines=False, engine='python', delimiter=';')
 
 #drugs data non-database
-obat_tambahan = 'obat_tambahan.csv'
-df2 = pd.read_csv(obat_tambahan)
+#obat_tambahan = 'obat_tambahan.csv'
+#df2 = pd.read_csv(obat_tambahan)
 
 #clean Unnamed columns
-df_apotik = df_apotik.drop(['Unnamed: 0','Unnamed: 2','Unnamed: 3','Unnamed: 4','Unnamed: 5','Unnamed: 7',
-                            'Unnamed: 8','Unnamed: 9','Unnamed: 10','Unnamed: 11','Unnamed: 12','Unnamed: 13',
-                            'Unnamed: 15','Unnamed: 17','Unnamed: 18'],axis=1)
+df_apotik = df_apotik.drop(['Unnamed: 2','Unnamed: 3','Unnamed: 5','Unnamed: 5','Unnamed: 7'],axis=1)
+
 #rename new columns
 df_apotik.columns = ['Kode Item','Nama Item','Stok','Harga Pokok']
 
-#conver df_apotik type data to float
+#convert decimal type of Harga Pokok to General
+df_apotik['Harga Pokok'] = df_apotik['Harga Pokok'].astype(str).replace('\.','',regex=True)
+
+#convert df_apotik type data to float
 df_apotik['Kode Item'] = pd.to_numeric(df_apotik['Kode Item'], errors='coerce')
 df_apotik['Harga Pokok'] = pd.to_numeric(df_apotik['Harga Pokok'], errors='coerce')
 df_apotik['Stok'] = pd.to_numeric(df_apotik['Stok'], errors='coerce')
@@ -47,8 +49,8 @@ df_apotik =df_apotik.replace({"Kode Item": 2849},{"Kode Item":'HVJY2221'})
 df_apotik.at[1635,"Stok"]=stok_pim_cherry
 harga_pim_lem = df_apotik.at[1635,"Harga Pokok"]=harga_pim_cherry
 
-#Tambahkan obat yang diubah
+#Adding other drugs
 #df_apotik = df_apotik.append(z,ignore_index=True)
-df_apotik.to_excel('combined_alammedika_0000000000.xlsx', index=False, header=True)
+df_apotik.to_excel('combined_alammedika_0000000000.xlsx', index=False, header=True, encoding='utf-8', engine='xlsxwriter')
 print("Updating Halodoc Items Have Done. (^oo^)")
-#print(df_apotik)
+#print(df_apotik.head(10))
