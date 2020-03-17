@@ -1,13 +1,6 @@
 import pandas as pd 
-import numpy as np 
+import time
 import xlsxwriter
-
-#import data halodoc
-#data_halodoc = 'data_halodoc.csv'
-#df_halodoc = pd.read_csv(data_halodoc)
-#df_halodoc = df_halodoc['PRODUCT_SKU']
-#df_halodoc = df_halodoc.dropna(axis=0)
-#df_halodoc = pd.to_numeric(df_halodoc, errors='coerce')
 
 #import data apotik
 df_apotik = pd.read_csv('xReport.csv', error_bad_lines=False, engine='python', delimiter=';')
@@ -43,14 +36,18 @@ df_apotik = df_apotik[df_apotik['Harga Pokok']!=0]
 df_apotik = df_apotik.reset_index(drop=True)
 
 #replace pim-tra-col cheery
-stok_pim_cherry = df_apotik.at[1734,"Stok"]
-harga_pim_cherry = df_apotik.at[1734,"Harga Pokok"]
-df_apotik =df_apotik.replace({"Kode Item": 2849},{"Kode Item":'HVJY2221'})
-df_apotik.at[1635,"Stok"]=stok_pim_cherry
-harga_pim_lem = df_apotik.at[1635,"Harga Pokok"]=harga_pim_cherry
+stok_pim_cherry = df_apotik.at[1747,"Stok"]
+harga_pim_cherry = df_apotik.at[1747,"Harga Pokok"]
+df_apotik = df_apotik.replace({"Kode Item": 2849 },{"Kode Item": 'HVJY2221' })
+df_apotik.at[1643,"Stok"]= stok_pim_cherry
+df_apotik.at[1643,"Harga Pokok"]= harga_pim_cherry
 
 #Adding other drugs
 #df_apotik = df_apotik.append(z,ignore_index=True)
-df_apotik.to_excel('combined_alammedika_0000000000.xlsx', index=False, header=True, encoding='utf-8', engine='xlsxwriter')
-print("Updating Halodoc Items Have Done. (^oo^)")
-#print(df_apotik.head(10))
+
+#time for naming output file day-mounth-year-hour-minute
+timestr = time.strftime("%d%m%Y%H%M")
+
+#output to excel format df.to_excel
+df_apotik.to_excel('combined_alammedika_'+timestr+'.xlsx', index=False, header=True, encoding='utf-8', engine='xlsxwriter')
+print("-------Updating Halodoc Items Succesfull----- \(^_^)/")
